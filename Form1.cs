@@ -19,9 +19,10 @@ namespace Morpion
             player2 = new Player("Player 2", CellState.O);
             currentPlayer = player1;
             InitializeBoard();
-    }
 
-    void InitializeBoard()
+        }
+
+        void InitializeBoard()
     {
         for (int row = 0; row < 3; row++)
         {
@@ -49,12 +50,16 @@ namespace Morpion
             if (HasWon(currentPlayer))
             {
                 MessageBox.Show(currentPlayer.Name + " wins!");
-                ResetBoard();
+                    // Afficher l'historique des victoires
+                    ShowWinsHistory();
+                    ResetBoard();
             }
             else if (IsBoardFull())
             {
                 MessageBox.Show("Draw!");
-                ResetBoard();
+                    // Afficher l'historique des victoires
+                    ShowWinsHistory();
+                    ResetBoard();
             }
             else
             {
@@ -91,8 +96,15 @@ namespace Morpion
         {
             return true;
         }
-
-        return false;
+            //if (player == player1)
+            //{
+            //    player1Wins++;
+            //}
+            //else
+            //{
+            //    player2Wins++;
+            //}
+            return false;
     }
 
     bool IsBoardFull()
@@ -122,6 +134,14 @@ namespace Morpion
         }
         moveHistory.Clear();
     }
-}
+    
+        private void ShowWinsHistory()
+        {
+            string message = "Player 1 wins: " + player1Wins + "\n"
+                           + "Player 2 wins: " + player2Wins;
+
+            MessageBox.Show(message, "Wins History");
+        }
+    }
 
 }
