@@ -68,46 +68,65 @@ namespace Morpion
         }
     }
 
-    bool HasWon(Player player)
-    {
-        for (int row = 0; row < 3; row++)
+        private bool HasWon(Player player)
         {
-            if (board[row, 0] == player.Symbol && board[row, 1] == player.Symbol && board[row, 2] == player.Symbol)
+            bool hasWon = false;
+
+            // Vérifier les lignes
+            for (int row = 0; row < 3; row++)
             {
-                return true;
+                if (board[row, 0] == player.Symbol &&
+                    board[row, 1] == player.Symbol &&
+                    board[row, 2] == player.Symbol)
+                {
+                    hasWon = true;
+                    break;
+                }
             }
-        }
 
-        // Vérifier les colonnes
-        for (int col = 0; col < 3; col++)
-        {
-            if (board[0, col] == player.Symbol && board[1, col] == player.Symbol && board[2, col] == player.Symbol)
+            // Vérifier les colonnes
+            for (int col = 0; col < 3; col++)
             {
-                return true;
+                if (board[0, col] == player.Symbol &&
+                    board[1, col] == player.Symbol &&
+                    board[2, col] == player.Symbol)
+                {
+                    hasWon = true;
+                    break;
+                }
             }
-        }
 
-        // Vérifier les diagonales
-        if (board[0, 0] == player.Symbol && board[1, 1] == player.Symbol && board[2, 2] == player.Symbol)
-        {
-            return true;
-        }
-        if (board[0, 2] == player.Symbol && board[1, 1] == player.Symbol && board[2, 0] == player.Symbol)
-        {
-            return true;
-        }
-            //if (player == player1)
-            //{
-            //    player1Wins++;
-            //}
-            //else
-            //{
-            //    player2Wins++;
-            //}
-            return false;
-    }
+            // Vérifier la diagonale principale
+            if (board[0, 0] == player.Symbol &&
+                board[1, 1] == player.Symbol &&
+                board[2, 2] == player.Symbol)
+            {
+                hasWon = true;
+            }
 
-    bool IsBoardFull()
+            // Vérifier la diagonale secondaire
+            if (board[0, 2] == player.Symbol &&
+                board[1, 1] == player.Symbol &&
+                board[2, 0] == player.Symbol)
+            {
+                hasWon = true;
+            }
+
+            if (hasWon)
+            {
+                if (player == player1)
+                {
+                    player1Wins++;
+                }
+                else
+                {
+                    player2Wins++;
+                }
+            }
+
+            return hasWon;
+        }
+        bool IsBoardFull()
     {
         for (int row = 0; row < 3; row++)
         {
