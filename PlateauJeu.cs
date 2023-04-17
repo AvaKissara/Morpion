@@ -57,7 +57,7 @@ namespace Morpion
             int col = this.Location.Y /70;
             if (plateau[row, col]==Joueur.CocheCellule.Empty)
             {
-                plateau[row, col] = Joueur.CocheCellule;
+                plateau[row, col] = Joueur.CocheCellule.X;
             }
         }
     }
