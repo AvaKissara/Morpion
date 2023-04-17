@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,23 +33,46 @@ namespace Morpion
         {
             return finPartie;
         }
-        private List<Joueur> lesParticipants;
 
-        public Match(int NumMatch, Joueur Joueur, int Row, int Col, DateTime FinPartie)
+        public List<Joueur> lesParticipants;
+
+        public Match(int NumMatch, int Row, int Col, DateTime FinPartie)
         {
             this.numMatch = NumMatch;
-            this.joueur = Joueur;
             this.row = Row;
             this.col = Col;
             this.finPartie = FinPartie;
-            lesParticipants = new List<Joueur>();
+            this.lesParticipants = new List<Joueur>();
         }
+        /// </summary>
 
+
+        private DataTable dtJoueur;
         public Match()
         {
             lesParticipants= new List<Joueur>();
-        }
+            dtJoueur = new DataTable();
+            dtJoueur.Columns.Add(new DataColumn("Pseudo", typeof(string)));
+            dtJoueur.Columns.Add(new DataColumn("Marqueur", typeof(string)));
 
+        }
+        public DataTable ListerJoueur()
+        {
+            DataRow row;
+            this.dtJoueur.Clear();
+
+            // Remplir la DataTable avec les données des villes
+            foreach (Joueur joueur in this.lesParticipants)
+            {
+                row = this.dtJoueur.NewRow();
+                row[0] = joueur.Pseudo;
+                row[1] = joueur.marqueur;
+
+                this.dtJoueur.Rows.Add(row);
+            }
+            // retourne la référence à la datatable
+            return this.dtJoueur;
+        }
         public void AjouterJoueur(Joueur unJoueur)
         {
             if (!lesParticipants.Contains(unJoueur))
@@ -56,5 +80,6 @@ namespace Morpion
                 this.lesParticipants.Add(unJoueur);
             }
         }
+
     }
 }

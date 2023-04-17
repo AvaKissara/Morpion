@@ -22,7 +22,6 @@ namespace Morpion
         private TextBox textBoxNomj2;
         private TextBox textBoxPrenomj2;
         private TextBox textBoxPseudoj2;
-        private CocheCellule marqueur;
         private Match leMatch;
 
      
@@ -95,7 +94,7 @@ namespace Morpion
             //Enum.TryParse(selectMarqueurJ1.SelectedValue.ToString(), out cocheCellule);
             //Enum.TryParse(selectMarqueurJ2.SelectedValue.ToString(), out cocheCellule);
 
-            this.leMatch = unMatch;
+            //this.leMatch = unMatch;
 
         }
         private void btnValider_Click(object sender, EventArgs e)
@@ -111,18 +110,23 @@ namespace Morpion
         {
             Joueur joueur1;
             Joueur joueur2;
+            Joueur j1;
+            Joueur j2;
             Match unMatch;
                     
             try
             {
                 compteurJoueur++;
-                joueur1 = new Joueur(compteurJoueur, textBoxNomj1.Text, textBoxPrenomj1.Text, textBoxPseudoj1.Text, Joueur.CocheCellule.X);
+                joueur1 = new Joueur(compteurJoueur, textBoxNomj1.Text, textBoxPrenomj1.Text, textBoxPseudoj1.Text);
+                j1 = new Joueur(textBoxPseudoj1.Text,Joueur.CocheJoueur.X);
                 compteurJoueur++;
-                joueur2 = new Joueur(compteurJoueur, textBoxNomj2.Text, textBoxPrenomj2.Text, textBoxPseudoj2.Text, Joueur.CocheCellule.O);
-                unMatch= new Match();
+                joueur2 = new Joueur(compteurJoueur, textBoxNomj2.Text, textBoxPrenomj2.Text, textBoxPseudoj2.Text);
+                j2 = new Joueur(textBoxPseudoj2.Text, Joueur.CocheJoueur.O);
+                unMatch = new Match();
                 compteurMatch++;
-                unMatch.AjouterJoueur(joueur1);
-                unMatch.AjouterJoueur(joueur2);
+                unMatch.AjouterJoueur(j1);
+                unMatch.AjouterJoueur(j2);
+                this.leMatch = unMatch;
                 return true;
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,28 +34,30 @@ namespace Morpion
             get { return pseudo; }
             set { pseudo = value; }
         }
-        private CocheCellule marqueur;
-        public enum CocheCellule
+        public CocheJoueur marqueur;
+        public enum CocheJoueur
         {
-            Empty,
             X,
             O
         }
-       
 
 
-        public Joueur(int IdJoueur, string PrenomJoueur, string NomJoueur, string Pseudo, CocheCellule Marqueur)
+        public Joueur(int IdJoueur, string PrenomJoueur, string NomJoueur, string Pseudo)
         {
             this.idJoueur= IdJoueur;
             this.prenomJoueur= PrenomJoueur;
             this.nomJoueur= NomJoueur;
             this.pseudo = Pseudo;
-            this.marqueur = Marqueur;
-
+            //this.marqueur = Marqueur;
         }
 
+        public Joueur(string Pseudo, CocheJoueur Marqueur)
+        {
+            this.pseudo = Pseudo;
+            this.marqueur = Marqueur;   
+        }
         
-    
+
     }
 
 
