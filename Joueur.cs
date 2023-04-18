@@ -37,10 +37,17 @@ namespace Morpion
         public CocheJoueur marqueur;
         public enum CocheJoueur
         {
+            Empty,
             X,
             O
         }
 
+        private int totalVictoire;
+        public int TotalVictoire
+        {
+            get { return totalVictoire;}
+            set { totalVictoire = value;}
+        }
 
         public Joueur(int IdJoueur, string PrenomJoueur, string NomJoueur, string Pseudo)
         {
@@ -51,10 +58,11 @@ namespace Morpion
             //this.marqueur = Marqueur;
         }
 
-        public Joueur(string Pseudo, CocheJoueur Marqueur)
+        public Joueur(string Pseudo, CocheJoueur Marqueur, int TotalVctoire)
         {
             this.pseudo = Pseudo;
             this.marqueur = Marqueur;   
+            this.totalVictoire= TotalVctoire;   
         }
         
 

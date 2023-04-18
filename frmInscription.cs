@@ -13,8 +13,8 @@ namespace Morpion
 {
     public partial class frmInscription : Form
     {
-        private static int compteurJoueur = 0;
-        private static int compteurMatch = 0;
+        private static int compteurJoueur = 1;
+        private static int compteurMatch = 1;
         private Joueur leJoueur;
         private TextBox textBoxNomj1;
         private TextBox textBoxPrenomj1;
@@ -99,8 +99,10 @@ namespace Morpion
         }
         private void btnValider_Click(object sender, EventArgs e)
         {
+           
             if (this.instancie())
             {
+                
                 this.DialogResult = DialogResult.OK;
                 PlateauJeu partie = new PlateauJeu(this.leMatch);
                 partie.ShowDialog();
@@ -118,12 +120,13 @@ namespace Morpion
             {
                 compteurJoueur++;
                 joueur1 = new Joueur(compteurJoueur, textBoxNomj1.Text, textBoxPrenomj1.Text, textBoxPseudoj1.Text);
-                j1 = new Joueur(textBoxPseudoj1.Text,Joueur.CocheJoueur.X);
+                j1 = new Joueur(textBoxPseudoj1.Text,Joueur.CocheJoueur.X, 0);
                 compteurJoueur++;
                 joueur2 = new Joueur(compteurJoueur, textBoxNomj2.Text, textBoxPrenomj2.Text, textBoxPseudoj2.Text);
-                j2 = new Joueur(textBoxPseudoj2.Text, Joueur.CocheJoueur.O);
-                unMatch = new Match();
+                j2 = new Joueur(textBoxPseudoj2.Text, Joueur.CocheJoueur.O, 0);
+
                 compteurMatch++;
+                unMatch = new Match(compteurMatch);            
                 unMatch.AjouterJoueur(j1);
                 unMatch.AjouterJoueur(j2);
                 this.leMatch = unMatch;

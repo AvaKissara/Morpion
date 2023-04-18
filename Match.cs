@@ -31,6 +31,7 @@ namespace Morpion
         private DateTime finPartie;
         public DateTime getTime()
         {
+            finPartie= DateTime.Now;    
             return finPartie;
         }
 
@@ -48,12 +49,14 @@ namespace Morpion
 
 
         private DataTable dtJoueur;
-        public Match()
+        public Match(int NumMatch)
         {
-            lesParticipants= new List<Joueur>();
+            this.numMatch = NumMatch;
+            lesParticipants = new List<Joueur>();
             dtJoueur = new DataTable();
             dtJoueur.Columns.Add(new DataColumn("Pseudo", typeof(string)));
             dtJoueur.Columns.Add(new DataColumn("Marqueur", typeof(string)));
+            dtJoueur.Columns.Add(new DataColumn("Victoires", typeof(int)));
 
         }
         public DataTable ListerJoueur()
@@ -64,9 +67,11 @@ namespace Morpion
             // Remplir la DataTable avec les données des villes
             foreach (Joueur joueur in this.lesParticipants)
             {
+
                 row = this.dtJoueur.NewRow();
                 row[0] = joueur.Pseudo;
                 row[1] = joueur.marqueur;
+                row[2] = joueur.TotalVictoire;
 
                 this.dtJoueur.Rows.Add(row);
             }
