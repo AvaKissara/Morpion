@@ -17,12 +17,15 @@ namespace Morpion
         public frmAccueil()
         {
             InitializeComponent();
-            Button button = new Button();
-            button.Size = new Size(170, 70);
-            button.Location = new Point(300, 180);
-            button.Text = "Commencer une partie".ToUpper();
-            button.Click += new System.EventHandler(Button_Click); 
-            Controls.Add(button);
+            Button btnStart = new Button();
+            btnStart.BackColor = Color.DarkGray;
+            btnStart.ForeColor = Color.MintCream;
+            btnStart.Size = new Size(190, 90);
+            btnStart.Location = new Point(300, 180);
+            btnStart.Font = new Font("Arial", 16);
+            btnStart.Text = "Commencer une partie".ToUpper();
+            btnStart.Click += new System.EventHandler(Button_Click); 
+            Controls.Add(btnStart);
         }
 
         private void Button_Click(object sender, EventArgs e)

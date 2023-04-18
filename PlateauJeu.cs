@@ -24,7 +24,7 @@ namespace Morpion
         private Joueur leJoueur;
         private Match leMatch;   
         public CocheCellule[,] plateau = new CocheCellule[3, 3];
-        //CocheCellule joueurActif = CocheCellule.X;
+        public Button[,] plateauButtons = new Button[3, 3];
         private List<Match> historique;
         private Joueur j1;
         private Joueur j2;
@@ -34,7 +34,8 @@ namespace Morpion
         private Button uneCase;
         public DataGridView recapMatch;
         private Label phaseJeu;
-        public int compteurManche =2;
+        private Label phaseMortSubite;
+        public int compteurManche = 2;
 
 
 
@@ -54,29 +55,31 @@ namespace Morpion
 
         public void AfficheJoueur()
         {
-            phaseJeu= new Label();
-            this.phaseJeu.Text = leMatch.GetNum().ToString();
-            phaseJeu.Location = new Point(420, 130);
-            Controls.Add((Label)phaseJeu);
-            recapMatch = new DataGridView();
+            this.phaseJeu= new Label();
+            this.phaseJeu.Text = "Match n°" + leMatch.GetNum().ToString();
+            this.phaseJeu.Location = new Point(420, 200);
+            this.phaseJeu.Size = new Size(220, 50);
+            this.phaseJeu.Font = new Font("Arial", 20);
+            this.Controls.Add((Label)phaseJeu);
+            this.recapMatch = new DataGridView();
             this.recapMatch.AutoGenerateColumns = false;
-            this.recapMatch.Location = new Point(300,200);
-            this.recapMatch.Size = new Size(400, 200);
-            //this.recapMatch.Dock = DockStyle.Fill;
+            this.recapMatch.AllowUserToAddRows = false;
+            this.recapMatch.Location = new Point(420,270);
+            this.recapMatch.Size = new Size(344, 76);
+            this.recapMatch.Font = new Font("Arial", 9);
+            this.recapMatch.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            this.recapMatch.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             Controls.Add(recapMatch);
-            // Ajouter une colonne pour le pseudo
             DataGridViewTextBoxColumn pseudoColumn = new DataGridViewTextBoxColumn();
             pseudoColumn.DataPropertyName = "Pseudo";
             pseudoColumn.HeaderText = "Pseudo";
             recapMatch.Columns.Add(pseudoColumn);
 
-            // Ajouter une colonne pour le marqueur
             DataGridViewTextBoxColumn marqueurColumn = new DataGridViewTextBoxColumn();
             marqueurColumn.DataPropertyName = "Marqueur";
             marqueurColumn.HeaderText = "Marqueur";
             recapMatch.Columns.Add(marqueurColumn);
 
-            // Ajouter une colonne pour le score
             DataGridViewTextBoxColumn victoireColumn = new DataGridViewTextBoxColumn();
             victoireColumn.DataPropertyName = "Victoires";
             victoireColumn.HeaderText = "Victoires";
@@ -87,28 +90,32 @@ namespace Morpion
         }
         public void InitializeBoard()
         {
-            for (int row = 0; row < 3; row++)
+            for (int row = 0; row <=2; row++)
             {
-                for (int col = 0; col < 3; col++)
+                for (int col = 0; col <=2; col++)
                 {
-                    uneCase = new Button();
-                    uneCase.Size = new Size(70, 70);
-                    uneCase.Location = new Point(col * 70, row * 70);
-                    uneCase.Click += uneCase_Click;              
-                    Controls.Add(uneCase);
-                    //j1 = new Joueur(, CocheCellule.X);
+                    this.uneCase = new Button();
+                    this.uneCase.Size = new Size(80, 80);
+                    this.uneCase.Location = new Point(50 + col * 85, 100 + row * 85);
+                    this.uneCase.Tag = new Point(row, col);
+                    this.uneCase.Font = new Font("Arial", 40);
+                    this.uneCase.Click += new EventHandler(uneCase_Click);              
+                    this.Controls.Add(uneCase);
                 }
             }
         }
 
         private void uneCase_Click(object sender, EventArgs e)
         {
+            
             phaseJeu.Text = "Partie en cours";
             Button command = (Button)sender;
-            int row = command.Location.X / 70;
-            int col = command.Location.Y / 70;
-             if(compteurManche != 0)
-             {
+            Point position = (Point)command.Tag;
+            int row = (command.Location.Y - 100) / 85;
+            int col = (command.Location.X - 50) / 85;
+            if (compteurManche != 0)
+            {
+
                 if (plateau[row, col] == CocheCellule.Empty)
                 {
                     plateau[row, col] = (CocheCellule)joueurActif.marqueur;
@@ -116,9 +123,51 @@ namespace Morpion
                     if (GagnerBataille(joueurActif))
                     {
                         compteurManche--;
+                      
                         MessageBox.Show(joueurActif.Pseudo + " est vainqueur!");
-                        // Afficher l'historique des victoires
-                        AfficherHistoriqueVictoire();
+                        if (j1Victoire == 2 || j2Victoire == 2)
+                        {
+                            AfficherVictoire();
+                        }
+                        if (j1Victoire == j2Victoire)
+                        {
+                            phaseMortSubite = new Label();
+                            this.phaseMortSubite.Location = new Point(420, 90);
+                            this.phaseMortSubite.Size = new Size(200, 50);
+                            this.phaseMortSubite.Font = new Font("Arial", 18);
+                            this.phaseMortSubite.ForeColor = Color.Red;
+                            this.Controls.Add((Label)phaseMortSubite);
+                            this.phaseMortSubite.Text = "MORT SUBITE";
+
+                            if (plateau[row, col] == CocheCellule.Empty)
+                            {
+                                plateau[row, col] = (CocheCellule)joueurActif.marqueur;
+                                command.Text = joueurActif.marqueur.ToString();
+                                if (GagnerBataille(joueurActif))
+                                {
+                                    if (joueurActif == j1)
+                                    {
+                                        j1.TotalVictoire++;
+                                    }
+                                    else
+                                    {
+                                        j2.TotalVictoire++;
+                                    }
+                                    MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
+                                    frmHallOfFame celebration = new frmHallOfFame();
+                                    celebration.ShowDialog();
+                                }
+                                else if (DefinirEgalite())
+                                {
+                                    MessageBox.Show("Match nul!");
+                                    Reset();
+                                }
+                                else
+                                {
+                                    joueurActif = joueurActif == j1 ? j2 : j1;
+                                }
+                            }
+                        }
                         Reset();
                         joueurActif = joueurActif == j1 ? j2 : j1;
                     }
@@ -126,7 +175,6 @@ namespace Morpion
                     {
                         compteurManche--;
                         MessageBox.Show("Match nul!");
-                        AfficherHistoriqueVictoire();
                         Reset();
                         joueurActif = joueurActif == j1 ? j2 : j1;
                     }
@@ -136,43 +184,44 @@ namespace Morpion
                     }
                 }
             }
-
             else if (j1Victoire == j2Victoire)
             {
-              
-                //command = (Button)sender;
-                //row = command.Location.X / 70;
-                //col = command.Location.Y / 70;
-                     if (plateau[row, col] == CocheCellule.Empty)
-                     {
 
-                        plateau[row, col] = (CocheCellule)joueurActif.marqueur;
-                        command.Text = joueurActif.marqueur.ToString();
-                        if (GagnerBataille(joueurActif))
+                if (plateau[row, col] == CocheCellule.Empty)
+                {
+                    plateau[row, col] = (CocheCellule)joueurActif.marqueur;
+                    command.Text = joueurActif.marqueur.ToString();
+                    if (GagnerBataille(joueurActif))
+                    {
+                        if (joueurActif == j1)
                         {
-                            MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
-                            // Afficher l'historique des victoires
-                            //AfficherHistoriqueVictoire();
-                            
-                            frmHallOfFame celebration = new frmHallOfFame();
-                            celebration.ShowDialog();
-                        }
-                        else if (DefinirEgalite())
-                        {
-                            MessageBox.Show("Match nul!");
-                            Reset();
+                            j1.TotalVictoire++;
                         }
                         else
                         {
-                            joueurActif = joueurActif == j1 ? j2 : j1;
+                            j2.TotalVictoire++;
                         }
-                     }
+                        MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
+                        frmHallOfFame celebration = new frmHallOfFame();
+                        celebration.ShowDialog();
+                    }
+                    else if (DefinirEgalite())
+                    {
+                        MessageBox.Show("Match nul!");
+                        Reset();
+                    }
                     else
-                    { MessageBox.Show("Recommencer ?"); }
+                    {
+                        joueurActif = joueurActif == j1 ? j2 : j1;
+                    }
+                }
             }
-               
-                
-            
+
+            else
+            {
+                AfficherVictoire();
+            }
+
         }
 
         private bool GagnerBataille(Joueur unJoueur)
@@ -187,6 +236,7 @@ namespace Morpion
                    plateau[row, 2] == (CocheCellule)unJoueur.marqueur)
                 {
                     victoire = true;
+
                 }
             }
 
@@ -219,15 +269,15 @@ namespace Morpion
 
             if (victoire)
             {
-                if (unJoueur == j1)
+                if (joueurActif == j1)
                 {
-                    j1.TotalVictoire++;
                     j1Victoire++;
+                    j1.TotalVictoire++;
                 }
                 else
                 {
-                    j2.TotalVictoire++;
                     j2Victoire++;
+                    j2.TotalVictoire++;
                 }
                 AfficheJoueur();
             }
@@ -250,6 +300,8 @@ namespace Morpion
             return true;
          }
 
+      
+
         public void Reset()
         {
             for (int row = 0; row < 3; row++)
@@ -263,12 +315,11 @@ namespace Morpion
             historique.Clear();
         }
 
-        private void AfficherHistoriqueVictoire()
+        public void AfficherVictoire()
         {
-            string message = j1.Pseudo + " wins: " + j1Victoire + "\n"
-                           + j2.Pseudo + " wins: " +  j2Victoire + "\n";
-
-            MessageBox.Show(message, "Historique des victoires");
+           MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
+           frmHallOfFame celebration = new frmHallOfFame();
+           celebration.ShowDialog();
         }
     }
 }

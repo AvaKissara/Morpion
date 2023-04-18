@@ -13,8 +13,8 @@ namespace Morpion
 {
     public partial class frmInscription : Form
     {
-        private static int compteurJoueur = 1;
-        private static int compteurMatch = 1;
+        private static int compteurJoueur = 0;
+        private static int compteurMatch = 0;
         private Joueur leJoueur;
         private TextBox textBoxNomj1;
         private TextBox textBoxPrenomj1;
@@ -32,13 +32,16 @@ namespace Morpion
             Label labelj1 = new Label();
             labelj1.Text = "joueur X".ToUpper();
             labelj1.Location = new Point(250, 50);
+            labelj1.Font = new Font("Arial", 12);
             Controls.Add((Label)labelj1);
             Label labelj2 = new Label();
             labelj2.Text = "joueur 0".ToUpper();
             labelj2.Location = new Point(420, 50);
+            labelj2.Font = new Font("Arial", 12);
             Controls.Add((Label)labelj2);
 
             Label labelNom = new Label();
+            labelNom.Font = new Font("Arial", 10);
             labelNom.Text = "Nom";
             labelNom.Location = new Point(150, 130);
             Controls.Add((Label)labelNom);
@@ -50,6 +53,7 @@ namespace Morpion
             textBoxNomj2.Location = new Point(420, 130);
             Controls.Add((TextBox)textBoxNomj2);
             Label labelPrenom = new Label();
+            labelPrenom.Font = new Font("Arial", 10);
             labelPrenom.Text = "Prénom";
             labelPrenom.Location = new Point(150, 180);
             Controls.Add((Label)labelPrenom);
@@ -60,6 +64,7 @@ namespace Morpion
             textBoxPrenomj2.Location = new Point(420, 180);
             Controls.Add((TextBox)textBoxPrenomj2);
             Label labelPseudo = new Label();
+            labelPseudo.Font = new Font("Arial", 10);
             labelPseudo.Text = "Pseudo";
             labelPseudo.Location = new Point(150, 230);
             Controls.Add((Label)labelPseudo);
@@ -70,32 +75,15 @@ namespace Morpion
             textBoxPseudoj2.Location = new Point(420, 230);
             Controls.Add((TextBox)textBoxPseudoj2);
             
-
-            //ComboBox selectMarqueurJ1 = new ComboBox();
-            //selectMarqueurJ1.Location = new Point(250, 290);
-            //selectMarqueurJ1.Size = new Size(100, 20);
-            //Controls.Add((ComboBox)selectMarqueurJ1);
-            //ComboBox selectMarqueurJ2 = new ComboBox();
-            //selectMarqueurJ2.Location = new Point(420, 290);
-            //selectMarqueurJ2.Size = new Size(100, 20);
-            //selectMarqueurJ2.Items.Add("hi");
-            //Controls.Add((ComboBox)selectMarqueurJ2);
-
             Button btnValider = new Button();
-            btnValider.Size = new Size(120, 30);
-            btnValider.Location = new Point(330, 360);
+            btnValider.Size = new Size(180, 30);
+            btnValider.Location = new Point(290, 360);
+            btnValider.BackColor = Color.DarkGray;
+            btnValider.ForeColor = Color.MintCream;
+            btnValider.Font = new Font("Arial", 12);
             btnValider.Text = "Lancer la partie";
             btnValider.Click += new System.EventHandler(this.btnValider_Click);
             Controls.Add((Button)btnValider);
-
-            //selectMarqueurJ1.DataSource = Enum.GetValues(typeof(CocheCellule));
-            //selectMarqueurJ2.DataSource = Enum.GetValues(typeof(CocheCellule));
-            //CocheCellule cocheCellule;
-            //Enum.TryParse(selectMarqueurJ1.SelectedValue.ToString(), out cocheCellule);
-            //Enum.TryParse(selectMarqueurJ2.SelectedValue.ToString(), out cocheCellule);
-
-            //this.leMatch = unMatch;
-
         }
         private void btnValider_Click(object sender, EventArgs e)
         {
