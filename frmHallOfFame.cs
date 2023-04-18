@@ -21,7 +21,7 @@ namespace Morpion
             this.labelHailYou = new Label();
             this.labelHailYou.Text = "Bravo";
             this.labelHailYou.Name = "labelHailYou";
-            this.labelHailYou.Location = new Point(260, 130);
+            this.labelHailYou.Location = new Point(300, 130);
             this.Controls.Add((Label)labelHailYou);
             this.btnRestart= new Button();
             this.btnRestart.Location = new Point(280, 280);

@@ -124,7 +124,7 @@ namespace Morpion
                     {
                         compteurManche--;
                       
-                        MessageBox.Show(joueurActif.Pseudo + " est vainqueur!");
+                        MessageBox.Show(joueurActif.Pseudo + " a gagné cette manche!");
                         if (j1Victoire == 2 || j2Victoire == 2)
                         {
                             AfficherVictoire();
@@ -138,35 +138,6 @@ namespace Morpion
                             this.phaseMortSubite.ForeColor = Color.Red;
                             this.Controls.Add((Label)phaseMortSubite);
                             this.phaseMortSubite.Text = "MORT SUBITE";
-
-                            if (plateau[row, col] == CocheCellule.Empty)
-                            {
-                                plateau[row, col] = (CocheCellule)joueurActif.marqueur;
-                                command.Text = joueurActif.marqueur.ToString();
-                                if (GagnerBataille(joueurActif))
-                                {
-                                    if (joueurActif == j1)
-                                    {
-                                        j1.TotalVictoire++;
-                                    }
-                                    else
-                                    {
-                                        j2.TotalVictoire++;
-                                    }
-                                    MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
-                                    frmHallOfFame celebration = new frmHallOfFame();
-                                    celebration.ShowDialog();
-                                }
-                                else if (DefinirEgalite())
-                                {
-                                    MessageBox.Show("Match nul!");
-                                    Reset();
-                                }
-                                else
-                                {
-                                    joueurActif = joueurActif == j1 ? j2 : j1;
-                                }
-                            }
                         }
                         Reset();
                         joueurActif = joueurActif == j1 ? j2 : j1;
@@ -201,9 +172,7 @@ namespace Morpion
                         {
                             j2.TotalVictoire++;
                         }
-                        MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
-                        frmHallOfFame celebration = new frmHallOfFame();
-                        celebration.ShowDialog();
+                        AfficherVictoire();
                     }
                     else if (DefinirEgalite())
                     {
