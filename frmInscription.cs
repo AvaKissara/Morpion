@@ -5,9 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Morpion.Joueur;
+using static System.Windows.Forms.DataFormats;
 
 namespace Morpion
 {
@@ -15,20 +17,23 @@ namespace Morpion
     {
         private static int compteurJoueur = 0;
         private static int compteurMatch = 0;
-        private Joueur leJoueur;
         private TextBox textBoxNomj1;
         private TextBox textBoxPrenomj1;
         private TextBox textBoxPseudoj1;
         private TextBox textBoxNomj2;
         private TextBox textBoxPrenomj2;
         private TextBox textBoxPseudoj2;
+        private Button btnCancel;
         private Match leMatch;
 
-     
+        /// <summary>
+        /// Constructeur pour le formulaire d'inscription qui prend un paramètre de type Match
+        /// </summary>
+        /// <param name="unMatch"></param>
         public frmInscription(Match unMatch)
         {
             InitializeComponent();
-
+            //Création du label pour le choix du joueur (X ou O)
             Label labelj1 = new Label();
             labelj1.Text = "joueur X".ToUpper();
             labelj1.Location = new Point(250, 50);
@@ -40,6 +45,7 @@ namespace Morpion
             labelj2.Font = new Font("Arial", 12);
             Controls.Add((Label)labelj2);
 
+            //Création du label et des textbox pour le nom, le prénom et le pseudo des deux joueurs
             Label labelNom = new Label();
             labelNom.Font = new Font("Arial", 10);
             labelNom.Text = "Nom";
@@ -74,7 +80,8 @@ namespace Morpion
             textBoxPseudoj2 = new TextBox();
             textBoxPseudoj2.Location = new Point(420, 230);
             Controls.Add((TextBox)textBoxPseudoj2);
-            
+
+            //Création du bouton pour valider l'envoie des informations
             Button btnValider = new Button();
             btnValider.Size = new Size(180, 30);
             btnValider.Location = new Point(290, 360);
@@ -84,18 +91,44 @@ namespace Morpion
             btnValider.Text = "Lancer la partie";
             btnValider.Click += new System.EventHandler(this.btnValider_Click);
             Controls.Add((Button)btnValider);
+
+            //Création pour fermer le formulaire
+            this.btnCancel = new Button();
+            this.btnCancel.Font = new Font("Arial", 10);
+            this.btnCancel.Location = new Point(600, 380);
+            this.btnCancel.Size = new Size(160, 40);
+            this.btnCancel.BackColor = Color.DarkGray;
+            this.btnCancel.ForeColor = Color.MintCream;
+            this.btnCancel.Text = "Quitter".ToUpper();
+            this.btnCancel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.btnCancel.Click += new System.EventHandler(btnCancel_Click);
+            this.Controls.Add(this.btnCancel);
         }
+
+        /// <summary>
+        /// Permet l'instanciation des joueurs après vérification des champs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnValider_Click(object sender, EventArgs e)
         {
-           
-            if (this.instancie())
+            if(this.controle())
             {
-                
-                this.DialogResult = DialogResult.OK;
-                PlateauJeu partie = new PlateauJeu(this.leMatch);
-                partie.ShowDialog();
+                if (this.instancie())
+                {
+                    this.Hide();
+                    PlateauJeu partie = new PlateauJeu(this.leMatch);
+                    partie.Closed += (jager, pastis) => this.Show();
+                    partie.ShowDialog();
+                }
             }
+           
         }
+
+        /// <summary>
+        /// Retourne un booléen quant à la réussite de l'instanciation de l'objet
+        /// </summary>
+        /// <returns>Boolean</returns>
         private Boolean instancie()
         {
             Joueur joueur1;
@@ -103,18 +136,18 @@ namespace Morpion
             Joueur j1;
             Joueur j2;
             Match unMatch;
-                    
+
             try
             {
                 compteurJoueur++;
                 joueur1 = new Joueur(compteurJoueur, textBoxNomj1.Text, textBoxPrenomj1.Text, textBoxPseudoj1.Text);
-                j1 = new Joueur(textBoxPseudoj1.Text,Joueur.CocheJoueur.X, 0);
+                j1 = new Joueur(textBoxPseudoj1.Text, Joueur.CocheJoueur.X, 0);
                 compteurJoueur++;
                 joueur2 = new Joueur(compteurJoueur, textBoxNomj2.Text, textBoxPrenomj2.Text, textBoxPseudoj2.Text);
                 j2 = new Joueur(textBoxPseudoj2.Text, Joueur.CocheJoueur.O, 0);
 
                 compteurMatch++;
-                unMatch = new Match(compteurMatch);            
+                unMatch = new Match(compteurMatch);
                 unMatch.AjouterJoueur(j1);
                 unMatch.AjouterJoueur(j2);
                 this.leMatch = unMatch;
@@ -126,6 +159,44 @@ namespace Morpion
             }
         }
 
-
+        private Boolean controle()
+        {
+            Boolean code = true;
+            if (string.IsNullOrEmpty(textBoxNomj1.Text))
+            {
+                code = false;
+                MessageBox.Show("Le j1 n'a pas renseigner le champs nom !", "ERREUR", MessageBoxButtons.OK);
+            }
+            if (string.IsNullOrEmpty(textBoxNomj2.Text))
+            {
+                code = false;
+                MessageBox.Show("Le j2 n'a pas renseigner le champs nom !", "ERREUR", MessageBoxButtons.OK);
+            }
+            if (string.IsNullOrEmpty(textBoxPrenomj1.Text))
+            {
+                code = false;
+                MessageBox.Show("Le j1 n'a pas renseigner le champs prénom !", "ERREUR", MessageBoxButtons.OK);
+            }
+            if (string.IsNullOrEmpty(textBoxPrenomj2.Text))
+            {
+                code = false;
+                MessageBox.Show("Le j2 n'a pas renseigner le champs prénom !", "ERREUR", MessageBoxButtons.OK);
+            }
+            if (string.IsNullOrEmpty(textBoxPseudoj1.Text))
+            {
+                code = false;
+                MessageBox.Show("Le j1 n'a pas renseigner le champs pseudo !", "ERREUR", MessageBoxButtons.OK);
+            }
+            if (string.IsNullOrEmpty(textBoxPseudoj2.Text))
+            {
+                code = false;
+                MessageBox.Show("Le j2 n'a pas renseigner le champs pseudo !", "ERREUR", MessageBoxButtons.OK);
+            }
+            return code;
+        }
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

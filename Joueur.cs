@@ -64,9 +64,5 @@ namespace Morpion
             this.marqueur = Marqueur;   
             this.totalVictoire= TotalVctoire;   
         }
-        
-
     }
-
-
 }

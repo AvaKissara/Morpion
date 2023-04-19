@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
 
 
 namespace Morpion
 {
     public partial class PlateauJeu : Form
     {
-        string phaseJeuText;
         public CocheCellule jeton;
         public enum CocheCellule
         {
@@ -24,7 +24,6 @@ namespace Morpion
         private Joueur leJoueur;
         private Match leMatch;   
         public CocheCellule[,] plateau = new CocheCellule[3, 3];
-        public Button[,] plateauButtons = new Button[3, 3];
         private List<Match> historique;
         private Joueur j1;
         private Joueur j2;
@@ -35,10 +34,9 @@ namespace Morpion
         public DataGridView recapMatch;
         private Label phaseJeu;
         private Label phaseMortSubite;
-        public int compteurManche = 2;
-
-
-
+        public int compteurManche = 6;
+        private Button btnEgalite;
+        private Button btnCancel;
 
         public PlateauJeu(Match unMatch)
         {
@@ -57,19 +55,32 @@ namespace Morpion
         {
             this.phaseJeu= new Label();
             this.phaseJeu.Text = "Match n°" + leMatch.GetNum().ToString();
-            this.phaseJeu.Location = new Point(420, 200);
+            this.phaseJeu.Location = new Point(420, 210);
             this.phaseJeu.Size = new Size(220, 50);
             this.phaseJeu.Font = new Font("Arial", 20);
             this.Controls.Add((Label)phaseJeu);
             this.recapMatch = new DataGridView();
             this.recapMatch.AutoGenerateColumns = false;
             this.recapMatch.AllowUserToAddRows = false;
+            this.recapMatch.ForeColor = Color.Black;
             this.recapMatch.Location = new Point(420,270);
             this.recapMatch.Size = new Size(344, 76);
             this.recapMatch.Font = new Font("Arial", 9);
             this.recapMatch.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             this.recapMatch.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Controls.Add(recapMatch);
+            this.Controls.Add(recapMatch);
+
+            this.btnCancel = new Button();
+            this.btnCancel.Font = new Font("Arial", 10);
+            this.btnCancel.Location = new Point(600, 380);
+            this.btnCancel.Size = new Size(160, 40);
+            this.btnCancel.BackColor = Color.DarkGray;
+            this.btnCancel.ForeColor = Color.MintCream;
+            this.btnCancel.Text = "Quitter".ToUpper();
+            this.btnCancel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.btnCancel.Click += new System.EventHandler(btnCancel_Click);
+            this.Controls.Add(this.btnCancel);
+
             DataGridViewTextBoxColumn pseudoColumn = new DataGridViewTextBoxColumn();
             pseudoColumn.DataPropertyName = "Pseudo";
             pseudoColumn.HeaderText = "Pseudo";
@@ -115,7 +126,6 @@ namespace Morpion
             int col = (command.Location.X - 50) / 85;
             if (compteurManche != 0)
             {
-
                 if (plateau[row, col] == CocheCellule.Empty)
                 {
                     plateau[row, col] = (CocheCellule)joueurActif.marqueur;
@@ -125,19 +135,31 @@ namespace Morpion
                         compteurManche--;
                       
                         MessageBox.Show(joueurActif.Pseudo + " a gagné cette manche!");
-                        if (j1Victoire == 2 || j2Victoire == 2)
+                        if (compteurManche == 0 && j1Victoire == j2Victoire)
                         {
-                            AfficherVictoire();
-                        }
-                        if (j1Victoire == j2Victoire)
-                        {
-                            phaseMortSubite = new Label();
-                            this.phaseMortSubite.Location = new Point(420, 90);
+                            this.BackColor = Color.Black;
+                            this.ForeColor = Color.White;
+
+                            this.phaseMortSubite = new Label();
+                            this.phaseMortSubite.Location = new Point(420, 50);
                             this.phaseMortSubite.Size = new Size(200, 50);
                             this.phaseMortSubite.Font = new Font("Arial", 18);
                             this.phaseMortSubite.ForeColor = Color.Red;
                             this.Controls.Add((Label)phaseMortSubite);
                             this.phaseMortSubite.Text = "MORT SUBITE";
+
+                            this.btnEgalite = new Button();
+                            this.btnEgalite.Location = new Point(420, 120);
+                            this.btnEgalite.Size = new Size(200, 50);
+                           
+                            this.btnEgalite.Text = "Déclarer une égalité".ToUpper();
+                            this.btnEgalite.Click += new EventHandler(egalite_Click);
+                            this.Controls.Add((Button)btnEgalite);
+
+                        }
+                        else if (compteurManche ==0)
+                        {
+                            AfficherVictoire();
                         }
                         Reset();
                         joueurActif = joueurActif == j1 ? j2 : j1;
@@ -157,7 +179,6 @@ namespace Morpion
             }
             else if (j1Victoire == j2Victoire)
             {
-
                 if (plateau[row, col] == CocheCellule.Empty)
                 {
                     plateau[row, col] = (CocheCellule)joueurActif.marqueur;
@@ -185,19 +206,23 @@ namespace Morpion
                     }
                 }
             }
+            //else
+            //{
+            //    AfficherVictoire();
+            //}
+        }
 
-            else
-            {
-                AfficherVictoire();
-            }
-
+        private void egalite_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Félicitations, vous êtes sexy !");
+            frmHallOfFame celebration = new frmHallOfFame();
+            celebration.ShowDialog();
         }
 
         private bool GagnerBataille(Joueur unJoueur)
         {
             bool victoire = false;
             
-            // Vérifier les lignes
             for (int row = 0; row < 3; row++)
             {
                 if (plateau[row, 0] == (CocheCellule)unJoueur.marqueur &&
@@ -209,7 +234,6 @@ namespace Morpion
                 }
             }
 
-            // Vérifier les colonnes
             for (int col = 0; col < 3; col++)
             {
                 if (plateau[0,col] == (CocheCellule)unJoueur.marqueur&&
@@ -220,7 +244,6 @@ namespace Morpion
                     }
             }
 
-            // Vérifier la diagonale principale
             if (plateau[0, 0] == (CocheCellule)unJoueur.marqueur &&
                 plateau[1, 1] == (CocheCellule)unJoueur.marqueur &&
                 plateau[2, 2] == (CocheCellule)unJoueur.marqueur)
@@ -228,7 +251,6 @@ namespace Morpion
                 victoire = true;
             }
 
-            // Vérifier la diagonale secondaire
             if (plateau[0, 2] == (CocheCellule)unJoueur.marqueur &&
                 plateau[1, 1] == (CocheCellule)unJoueur.marqueur &&
                 plateau[2, 0] == (CocheCellule)unJoueur.marqueur)
@@ -269,8 +291,6 @@ namespace Morpion
             return true;
          }
 
-      
-
         public void Reset()
         {
             for (int row = 0; row < 3; row++)
@@ -285,10 +305,17 @@ namespace Morpion
         }
 
         public void AfficherVictoire()
+        {           
+            MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
+            this.Hide();
+            frmHallOfFame celebration = new frmHallOfFame();
+
+            celebration.Closed += (whisky, perrier) => this.Show();
+            celebration.ShowDialog();
+        }
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-           MessageBox.Show(joueurActif.Pseudo + " est le grand vainqueur!");
-           frmHallOfFame celebration = new frmHallOfFame();
-           celebration.ShowDialog();
+            this.Close();
         }
     }
 }

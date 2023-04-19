@@ -75,7 +75,6 @@ namespace Morpion
 
                 this.dtJoueur.Rows.Add(row);
             }
-            // retourne la référence à la datatable
             return this.dtJoueur;
         }
         public void AjouterJoueur(Joueur unJoueur)

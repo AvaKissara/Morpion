@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
 
 namespace Morpion
 {
@@ -30,7 +31,9 @@ namespace Morpion
 
         private void Button_Click(object sender, EventArgs e)
         {
+            this.Hide();
             frmInscription inscription = new frmInscription(this.leMatch);
+            inscription.Closed += (jager, mayo) => this.Show();
             inscription.ShowDialog();
         }
     }
