@@ -27,6 +27,7 @@ namespace Morpion
             this.labelHailYou.Name = "labelHailYou";
             this.labelHailYou.Location = new Point(320, 130);
             this.Controls.Add((Label)labelHailYou);
+
             this.btnRestart= new Button();
             this.btnRestart.Location = new Point(280, 200);
             this.btnRestart.Size = new Size(200, 100);
@@ -42,7 +43,6 @@ namespace Morpion
             this.btnCancel.Location = new Point(600, 380);
             this.btnCancel.Size= new Size(170, 50);
             this.btnCancel.Text = "Quitter".ToUpper();
-            this.btnCancel.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
             this.btnCancel.Click += new System.EventHandler(btnCancel_Click);
             this.Controls.Add(this.btnCancel);
 

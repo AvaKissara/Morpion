@@ -68,6 +68,7 @@ namespace Morpion
             this.recapMatch.Font = new Font("Arial", 9);
             this.recapMatch.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             this.recapMatch.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             this.Controls.Add(recapMatch);
 
             this.btnCancel = new Button();
@@ -97,7 +98,7 @@ namespace Morpion
             recapMatch.Columns.Add(victoireColumn);
 
             this.recapMatch.DataSource = leMatch.ListerJoueur();
-            this.recapMatch.Refresh();
+            this.recapMatch.Refresh();       
         }
         public void InitializeBoard()
         {

@@ -45,7 +45,7 @@ namespace Morpion
             this.finPartie = FinPartie;
             this.lesParticipants = new List<Joueur>();
         }
-        /// </summary>
+    
 
 
         private DataTable dtJoueur;
